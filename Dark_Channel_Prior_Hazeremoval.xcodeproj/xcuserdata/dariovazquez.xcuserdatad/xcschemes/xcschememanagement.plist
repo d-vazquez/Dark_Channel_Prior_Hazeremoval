@@ -4,10 +4,25 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Dark_Channel_Prior_Hazeremoval.xcscheme_^#shared#^_</key>
+		<key>DCP_opencv.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+		<key>DCP_purecpp.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
+		<key>Mat Reader.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+		<key>Mat Writter.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
 		</dict>
 		<key>mat_mask_operations.xcscheme_^#shared#^_</key>
 		<dict>
@@ -22,6 +37,11 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>4F3FEF99299381450082F4B6</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>4FA60CAD296DD0A8000559AB</key>
 		<dict>
 			<key>primary</key>
