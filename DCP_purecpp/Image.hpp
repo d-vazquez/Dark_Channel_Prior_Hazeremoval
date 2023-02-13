@@ -83,6 +83,17 @@ public:
     float& operator()(int x) const {
         return _data[x];
     }
+    
+    void print() {
+        for(int i = 0; i < this->rows(); i++)
+        {
+            for(int j = 0; j < this->cols(); j++)
+            {
+                std::cout << (*this)(0,i,j) << ", ";
+            }
+            std::cout << std::endl;
+        }
+    }
 //    
 //    const Image operator*(const Image B)
 //    {
