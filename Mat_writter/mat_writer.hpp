@@ -11,5 +11,6 @@
 #include "opencv2/core.hpp"
 
 void write_mat_print(cv::Mat &im);
+void write_mat_print_int(cv::Mat &im);
 
 #endif /* mat_writer_h */
