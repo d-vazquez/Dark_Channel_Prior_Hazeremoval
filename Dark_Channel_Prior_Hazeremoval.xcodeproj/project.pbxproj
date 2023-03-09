@@ -78,7 +78,6 @@
 /* Begin PBXFileReference section */
 		4F027F4E2995F811005119AC /* Image.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Image.cpp; sourceTree = "<group>"; };
 		4F027F4F2995F811005119AC /* Image.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Image.hpp; sourceTree = "<group>"; };
-		4F3FEF9129937B1E0082F4B6 /* image_array.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = image_array.txt; sourceTree = "<group>"; };
 		4F3FEF9329937C4F0082F4B6 /* matrix.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = matrix.cpp; sourceTree = "<group>"; };
 		4F3FEF95299380DD0082F4B6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		4F3FEFAE299383E30082F4B6 /* Mat Writter */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Mat Writter"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -176,7 +175,6 @@
 				4F3FEF95299380DD0082F4B6 /* main.cpp */,
 				4F3FEFC12993FC670082F4B6 /* mat_writer.hpp */,
 				4F3FEFC22993FC670082F4B6 /* mat_writer.cpp */,
-				4F3FEF9129937B1E0082F4B6 /* image_array.txt */,
 			);
 			path = Mat_writter;
 			sourceTree = "<group>";
