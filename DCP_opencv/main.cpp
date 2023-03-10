@@ -31,7 +31,7 @@ const Mat DarkChannel(Mat &img, int sz);
 const Scalar AtmLight(Mat &img, Mat &dark);
 const Mat  TransmissionEstimate(Mat &im, Scalar A, int sz);
 const Mat TransmissionRefine(Mat &im, Mat &et);
-const Mat Guidedfilter(Mat &im, Mat &p, int r, int eps);
+const Mat Guidedfilter(Mat &im, Mat &p, int r, float eps);
 const Mat Recover(Mat &im, Mat &t, Scalar A, float tx);
 
 const Mat DarkChannel(Mat &img, int sz)
@@ -112,10 +112,10 @@ const Mat TransmissionRefine(Mat &im, Mat &et)
 {
     Mat gray;
     cvtColor(im, gray, cv::COLOR_BGR2GRAY);
-    return Guidedfilter(gray, et, 60, 1);
+    return Guidedfilter(gray, et, 60, 0.0001);
 }
 
-const Mat Guidedfilter(Mat &im, Mat &p, int r, int eps)
+const Mat Guidedfilter(Mat &im, Mat &p, int r, float eps)
 {
     cout << im.type() << endl;
     
@@ -151,7 +151,20 @@ const Mat Guidedfilter(Mat &im, Mat &p, int r, int eps)
     cv::boxFilter(im.mul(im), mean_II,CV_32F,Size(r,r));
     Mat var_I = mean_II - mean_I.mul(mean_I);
 
+    
+    cout << "cov_Ip = "<< cov_Ip(Range(0,1),Range(0,5)) << endl;
+    cout << cov_Ip.at<float>(0,0) << endl;
+    
+    cout << "var_I  = "<< var_I(Range(0,1),Range(0,5)) << endl;
+    cout << var_I.at<float>(0,0) << endl;
+    
     Mat a = cov_Ip/(var_I + eps);
+    
+    cout << "a      = "<< a(Range(0,1),Range(0,5)) << endl;
+    cout << a.at<float>(0,0) << endl;
+    
+    cout << cov_Ip.at<float>(0,0)/var_I.at<float>(0,0)  << endl;
+    
     Mat b = mean_p - a.mul(mean_I);
 
     cv::boxFilter(a, mean_a, CV_32F, Size(r,r));
