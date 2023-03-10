@@ -23,54 +23,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "0730D5F1-F08C-492F-AC4A-2E5B17EE35E7"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "DCP_opencv/main.cpp"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "188"
-            endingLineNumber = "188"
-            landmarkName = "Recover(im, t, A)"
-            landmarkType = "9">
-            <Locations>
-               <Location
-                  uuid = "0730D5F1-F08C-492F-AC4A-2E5B17EE35E7 - cfde56b6d970847e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Recover(cv::Mat&amp;, cv::Mat&amp;, cv::Scalar_&lt;double&gt;, float)"
-                  moduleName = "DCP_opencv"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dariovazquez/work/xcode_projects/Dark_Channel_Prior_Hazeremoval/DCP_opencv/main.cpp"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "175"
-                  endingLineNumber = "175"
-                  offsetFromSymbolStart = "1356">
-               </Location>
-               <Location
-                  uuid = "0730D5F1-F08C-492F-AC4A-2E5B17EE35E7 - cfde56b6d970845f"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Recover(cv::Mat&amp;, cv::Mat&amp;, cv::Scalar_&lt;double&gt;, float)"
-                  moduleName = "DCP_opencv"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dariovazquez/work/xcode_projects/Dark_Channel_Prior_Hazeremoval/DCP_opencv/main.cpp"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "176"
-                  endingLineNumber = "176"
-                  offsetFromSymbolStart = "1356">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "F42BEDDB-9CA1-4A7B-9614-73800B18C792"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -78,8 +30,8 @@
             filePath = "DCP_opencv/main.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "276"
-            endingLineNumber = "276"
+            startingLineNumber = "208"
+            endingLineNumber = "208"
             landmarkName = "main(argc, argv)"
             landmarkType = "9">
          </BreakpointContent>
@@ -94,8 +46,8 @@
             filePath = "DCP_opencv/main.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "139"
-            endingLineNumber = "139"
+            startingLineNumber = "131"
+            endingLineNumber = "131"
             landmarkName = "Guidedfilter(im, p, r, eps)"
             landmarkType = "9">
             <Locations>
@@ -135,54 +87,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "04179A77-E176-446E-B9B2-5885482D52CF"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "DCP_opencv/main.cpp"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "286"
-            endingLineNumber = "286"
-            landmarkName = "main(argc, argv)"
-            landmarkType = "9">
-            <Locations>
-               <Location
-                  uuid = "04179A77-E176-446E-B9B2-5885482D52CF - c234066d6241e46a"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "main"
-                  moduleName = "DCP_opencv"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dariovazquez/work/xcode_projects/Dark_Channel_Prior_Hazeremoval/DCP_opencv/main.cpp"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "251"
-                  endingLineNumber = "251"
-                  offsetFromSymbolStart = "2680">
-               </Location>
-               <Location
-                  uuid = "04179A77-E176-446E-B9B2-5885482D52CF - c234066d6241e46a"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "main"
-                  moduleName = "DCP_opencv"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dariovazquez/work/xcode_projects/Dark_Channel_Prior_Hazeremoval/DCP_opencv/main.cpp"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "251"
-                  endingLineNumber = "251"
-                  offsetFromSymbolStart = "2744">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "64381F48-A4B8-4EB3-8F47-3D0B4435D865"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -190,8 +94,8 @@
             filePath = "DCP_opencv/main.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "88"
-            endingLineNumber = "88"
+            startingLineNumber = "87"
+            endingLineNumber = "87"
             landmarkName = "TransmissionEstimate(im, A, sz)"
             landmarkType = "9">
             <Locations>
@@ -343,9 +247,9 @@
             filePath = "DCP_opencv/main.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "184"
-            endingLineNumber = "184"
-            landmarkName = "Recover(im, t, A)"
+            startingLineNumber = "149"
+            endingLineNumber = "149"
+            landmarkName = "Guidedfilter(im, p, r, eps)"
             landmarkType = "9">
             <Locations>
                <Location
@@ -377,214 +281,6 @@
                   startingLineNumber = "184"
                   endingLineNumber = "184"
                   offsetFromSymbolStart = "1476">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "DF1FF3B5-169B-467A-8520-6CF1D0BA4DA8"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "DCP_opencv/main.cpp"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "133"
-            endingLineNumber = "133"
-            landmarkName = "Guidedfilter(im, p, r, eps)"
-            landmarkType = "9">
-            <Locations>
-               <Location
-                  uuid = "DF1FF3B5-169B-467A-8520-6CF1D0BA4DA8 - 41aa549ec2117e81"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Guidedfilter(cv::Mat&amp;, cv::Mat&amp;, int, int)"
-                  moduleName = "DCP_opencv"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dariovazquez/work/xcode_projects/Dark_Channel_Prior_Hazeremoval/DCP_opencv/main.cpp"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "128"
-                  endingLineNumber = "128"
-                  offsetFromSymbolStart = "2988">
-               </Location>
-               <Location
-                  uuid = "DF1FF3B5-169B-467A-8520-6CF1D0BA4DA8 - 41aa549ec2117ea0"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Guidedfilter(cv::Mat&amp;, cv::Mat&amp;, int, int)"
-                  moduleName = "DCP_opencv"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dariovazquez/work/xcode_projects/Dark_Channel_Prior_Hazeremoval/DCP_opencv/main.cpp"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "127"
-                  endingLineNumber = "127"
-                  offsetFromSymbolStart = "2996">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "78085F24-F059-44D1-8C0C-39A477294EC9"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "DCP_opencv/main.cpp"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "176"
-            endingLineNumber = "176"
-            landmarkName = "Guidedfilter(im, p, r, eps)"
-            landmarkType = "9">
-            <Locations>
-               <Location
-                  uuid = "78085F24-F059-44D1-8C0C-39A477294EC9 - 41aa549ec2117b7c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Guidedfilter(cv::Mat&amp;, cv::Mat&amp;, int, int)"
-                  moduleName = "DCP_opencv"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dariovazquez/work/xcode_projects/Dark_Channel_Prior_Hazeremoval/DCP_opencv/main.cpp"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "163"
-                  endingLineNumber = "163"
-                  offsetFromSymbolStart = "9692">
-               </Location>
-               <Location
-                  uuid = "78085F24-F059-44D1-8C0C-39A477294EC9 - 41aa549ec2117b23"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Guidedfilter(cv::Mat&amp;, cv::Mat&amp;, int, int)"
-                  moduleName = "DCP_opencv"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dariovazquez/work/xcode_projects/Dark_Channel_Prior_Hazeremoval/DCP_opencv/main.cpp"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "162"
-                  endingLineNumber = "162"
-                  offsetFromSymbolStart = "9672">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "A73ACC2A-0288-477F-8156-A5CBD02E31C9"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "DCP_opencv/main.cpp"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "177"
-            endingLineNumber = "177"
-            landmarkName = "Guidedfilter(im, p, r, eps)"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "4997CFCD-3941-4EAE-9B82-D794A10A5E06"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "DCP_opencv/main.cpp"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "164"
-            endingLineNumber = "164"
-            landmarkName = "Guidedfilter(im, p, r, eps)"
-            landmarkType = "9">
-            <Locations>
-               <Location
-                  uuid = "4997CFCD-3941-4EAE-9B82-D794A10A5E06 - 41aa549ec2117b5d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Guidedfilter(cv::Mat&amp;, cv::Mat&amp;, int, int)"
-                  moduleName = "DCP_opencv"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dariovazquez/work/xcode_projects/Dark_Channel_Prior_Hazeremoval/DCP_opencv/main.cpp"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "164"
-                  endingLineNumber = "164"
-                  offsetFromSymbolStart = "10300">
-               </Location>
-               <Location
-                  uuid = "4997CFCD-3941-4EAE-9B82-D794A10A5E06 - 41aa549ec2117b5d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Guidedfilter(cv::Mat&amp;, cv::Mat&amp;, int, int)"
-                  moduleName = "DCP_opencv"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dariovazquez/work/xcode_projects/Dark_Channel_Prior_Hazeremoval/DCP_opencv/main.cpp"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "164"
-                  endingLineNumber = "164"
-                  offsetFromSymbolStart = "10400">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "579806BB-32F7-4BCD-8478-F08E4FB13DD6"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "DCP_opencv/main.cpp"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "202"
-            endingLineNumber = "202"
-            landmarkName = "Recover(im, t, A)"
-            landmarkType = "9">
-            <Locations>
-               <Location
-                  uuid = "579806BB-32F7-4BCD-8478-F08E4FB13DD6 - cfde56b6d97078da"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Recover(cv::Mat&amp;, cv::Mat&amp;, cv::Scalar_&lt;double&gt;, float)"
-                  moduleName = "DCP_opencv"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dariovazquez/work/xcode_projects/Dark_Channel_Prior_Hazeremoval/DCP_opencv/main.cpp"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "203"
-                  endingLineNumber = "203"
-                  offsetFromSymbolStart = "3696">
-               </Location>
-               <Location
-                  uuid = "579806BB-32F7-4BCD-8478-F08E4FB13DD6 - cfde56b6d97078f5"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Recover(cv::Mat&amp;, cv::Mat&amp;, cv::Scalar_&lt;double&gt;, float)"
-                  moduleName = "DCP_opencv"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dariovazquez/work/xcode_projects/Dark_Channel_Prior_Hazeremoval/DCP_opencv/main.cpp"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "202"
-                  endingLineNumber = "202"
-                  offsetFromSymbolStart = "560">
                </Location>
             </Locations>
          </BreakpointContent>

@@ -52,7 +52,6 @@ const Mat DarkChannel(Mat &img, int sz)
     return dark;
 }
 
-
 const Scalar AtmLight(Mat &im, Mat &dark)
 {
     int _rows = im.rows;
@@ -107,7 +106,6 @@ const Mat  TransmissionEstimate(Mat &im, Scalar A, int sz)
     return transmission;
 }
 
-
 const Mat TransmissionRefine(Mat &im, Mat &et)
 {
     Mat gray;
@@ -117,10 +115,8 @@ const Mat TransmissionRefine(Mat &im, Mat &et)
 
 const Mat Guidedfilter(Mat &im, Mat &p, int r, float eps)
 {
-    cout << im.type() << endl;
-    
-    cout << "im before = " << endl << im(Range(0,5),Range(0,5)) << endl;
-    
+
+    // Conver to float
     im.convertTo(im, CV_32FC3);
     cv::normalize(im, im, 0, 1, cv::NORM_MINMAX);
     
@@ -128,43 +124,19 @@ const Mat Guidedfilter(Mat &im, Mat &p, int r, float eps)
     cv::normalize(p, p, 0, 1, cv::NORM_MINMAX);
     
     
-    cout << "im after = " << endl << im(Range(0,5),Range(0,5)) << endl;
-    
-    cout << im.type() << endl;
-    
     Mat q, mean_I, mean_p, mean_Ip;
     Mat mean_II, mean_a, mean_b;
     Mat im_p;
     
     cv::boxFilter(im, mean_I, CV_32F, Size(r,r));
-    
-//    imshow("im", im);
-//    imshow("mean_I", mean_I);
-//    waitKey(0);
-    
     cv::boxFilter(p, mean_p, CV_32F, Size(r,r));
-    
     cv::boxFilter(im.mul(p), mean_Ip, CV_32F, Size(r,r));
 
     Mat cov_Ip = mean_Ip - mean_I.mul(mean_p);
-
     cv::boxFilter(im.mul(im), mean_II,CV_32F,Size(r,r));
     Mat var_I = mean_II - mean_I.mul(mean_I);
-
-    
-    cout << "cov_Ip = "<< cov_Ip(Range(0,1),Range(0,5)) << endl;
-    cout << cov_Ip.at<float>(0,0) << endl;
-    
-    cout << "var_I  = "<< var_I(Range(0,1),Range(0,5)) << endl;
-    cout << var_I.at<float>(0,0) << endl;
     
     Mat a = cov_Ip/(var_I + eps);
-    
-    cout << "a      = "<< a(Range(0,1),Range(0,5)) << endl;
-    cout << a.at<float>(0,0) << endl;
-    
-    cout << cov_Ip.at<float>(0,0)/var_I.at<float>(0,0)  << endl;
-    
     Mat b = mean_p - a.mul(mean_I);
 
     cv::boxFilter(a, mean_a, CV_32F, Size(r,r));
@@ -172,50 +144,15 @@ const Mat Guidedfilter(Mat &im, Mat &p, int r, float eps)
     
     q = im.mul(mean_a) + mean_b;
     
-    
-    
-    cout << "q before = " << endl << q(Range(0,5),Range(0,5)) << endl;
-    
-    cv::normalize(q, q, 0, 255, cv::NORM_MINMAX);
-
-    cout << "q normalize = " << endl << q(Range(0,5),Range(0,5)) << endl;
-
-    
+    // Go back to uint8
+    q = q * 255;
     q.convertTo(q, CV_8UC1);
-    
-    
-    cout << "q after = " << endl << q(Range(0,5),Range(0,5)) << endl;
-    
-    cout << im.type() << endl;
     
     return q;
 }
 
-
 const Mat Recover(Mat &im, Mat &t, Scalar A, float tx=0.1)
 {
-    cout << im.type() << endl;
-    cout << t.type() << endl;
-//
-//    Mat res;
-//    
-//    t = cv::max(t, tx); // Make sure t does not contain 0
-//    
-//    // perform operation on each channel
-//    vector<Mat> res_ch(3);
-//    vector<Mat> im_ch(3);
-//    cv::split(im, im_ch);
-//    
-//    res_ch[0] = (im_ch[0] - A.val[0])/t + A.val[0];
-//    res_ch[1] = (im_ch[1] - A.val[1])/t + A.val[1];
-//    res_ch[2] = (im_ch[2] - A.val[2])/t + A.val[2];
-//    
-//    cv::merge(res_ch, res);
-    
-    cout << "im = " << endl << im(Range(0,5),Range(0,5)) << endl;
-    cout << "t = " << endl << t(Range(0,5),Range(0,5)) << endl;
-    cout << "A = " << endl << A.val[0] << endl;
-    
     Mat res;
     res.create(im.rows, im.cols, im.type());
     
@@ -228,10 +165,8 @@ const Mat Recover(Mat &im, Mat &t, Scalar A, float tx=0.1)
             res.at<Vec3b>(_row, _col)[0] = (im.at<Vec3b>(_row, _col)[0] - A.val[0])*factor + A.val[0];
             res.at<Vec3b>(_row, _col)[1] = (im.at<Vec3b>(_row, _col)[1] - A.val[1])*factor + A.val[1];
             res.at<Vec3b>(_row, _col)[2] = (im.at<Vec3b>(_row, _col)[2] - A.val[2])*factor + A.val[2];
-            
         }
     }
-    
     
     return res;
 }
@@ -263,9 +198,6 @@ int main(int argc, const char ** argv)
     auto start = high_resolution_clock::now();
     
     Mat dark    = DarkChannel(I,15);
-//    cout << "dark = " << endl << dark(Range(0,5),Range(0,5)) << endl;
-//    imshow("dark", dark);
-//    waitKey(0);
     
     auto _darkchannel = high_resolution_clock::now();
     
@@ -274,16 +206,10 @@ int main(int argc, const char ** argv)
     auto _airlight = high_resolution_clock::now();
     
     Mat te      = TransmissionEstimate(I,A,15);
-//    cout << "te = " << endl << te(Range(0,5),Range(0,5)) << endl;
-//    imshow("te", te);
-//    waitKey(0);
     
     auto _transmision = high_resolution_clock::now();
     
     Mat t       = TransmissionRefine(I,te);
-//    cout << "t = " << endl << t(Range(0,5),Range(0,5)) << endl;
-//    imshow("t", t);
-//    waitKey(0);
     
     auto _transmision_refine = high_resolution_clock::now();
     
@@ -305,12 +231,12 @@ int main(int argc, const char ** argv)
     cout << "Time taken by recover :            "  << duration_stop.count() << " milliseconds" << endl;
     cout << "Time total:                        "  << duration.count() << " milliseconds" << endl;
     
-    imshow("I", I);
-    imshow("dark", dark);
-    imshow("te", te);
-    imshow("t", t);
-    imshow("J", J);
-    waitKey(0);
+//    imshow("I", I);
+//    imshow("dark", dark);
+//    imshow("te", te);
+//    imshow("t", t);
+//    imshow("J", J);
+//    waitKey(0);
     
     return 0;
 }
