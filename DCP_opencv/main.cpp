@@ -27,15 +27,16 @@ const char* keys =
     "{@image1        |   /Users/dariovazquez/fuente.png  | image1 for process   }"
 };
 
-const Mat DarkChannel(Mat &img, int sz);
+void DarkChannel(Mat &img, int sz, Mat &dst);
 const Scalar AtmLight(Mat &img, Mat &dark);
-const Mat  TransmissionEstimate(Mat &im, Scalar A, int sz);
-const Mat TransmissionRefine(Mat &im, Mat &et);
-const Mat Guidedfilter(Mat &im, Mat &p, int r, float eps);
-const Mat Recover(Mat &im, Mat &t, Scalar A, float tx);
+void TransmissionEstimate(Mat &im, Scalar A, int sz, Mat &dst);
+void TransmissionRefine(Mat &im, Mat &et);
+void Guidedfilter(Mat &im_grey, Mat &transmission_map, int r, float eps);
+void Recover(Mat &im, Mat &t, Mat &dst, Scalar A, int tx);
 
-const Mat DarkChannel(Mat &img, int sz)
+void DarkChannel(Mat &img, int sz, Mat &dst)
 {
+#if 0
     // Split image into b, g, r channels
     vector<Mat> channels(3);
     cv::split(img, channels);
@@ -46,10 +47,55 @@ const Mat DarkChannel(Mat &img, int sz)
     // 'erode' image, so calculate the minimun value in the window given by sz
     Mat kernel = getStructuringElement(cv::MorphShapes::MORPH_RECT, Size(sz,sz));
     
-    Mat dark;
-    cv::erode(dc, dark, kernel);
- 
-    return dark;
+    cv::erode(dc, dst, kernel);
+#else
+#   if 0
+    dst = Mat::zeros(img.rows, img.cols, CV_8UC1);
+    
+    // Reduce memory
+    for(int row = 0; row < img.rows; row++)
+    {
+        for(int col = 0; col < img.cols; col++)
+        {
+            dst.at<uchar>(row,col) = cv::min(cv::min(img.at<Vec3b>(row,col)[0], img.at<Vec3b>(row,col)[1]), img.at<Vec3b>(row,col)[2]);
+        }
+    }
+#   else
+    
+    // Init destination and temp Mat
+    dst = Mat::zeros(img.rows, img.cols, CV_8UC1);
+    Mat temp(img.rows, img.cols, CV_8UC1);
+    
+    // Move ch0 to dst and ch1 to temp to compare later
+    int from_to[] = { 0,0, 1,1 };
+    Mat out[]     = { dst, temp };
+    
+    // Actually move arrays
+    cv::mixChannels( &img, 1, out, 2, from_to, 2 );
+    
+    // Get min from ch0 and ch1
+    dst = cv::min(dst, temp);
+    
+    // dst contains min from ch0 and ch1, need to extract ch2
+    int from_to2[]= { 2,0 };
+    cv::mixChannels( &img, 1, &temp, 1, from_to2, 1 );
+    
+    // Get min from min and ch2
+    dst = cv::min(dst, temp);
+    
+    // release temp memory
+    temp.release();
+    
+#   endif
+    // 'erode' image, so calculate the minimun value in the window given by sz
+    Mat kernel = getStructuringElement(cv::MorphShapes::MORPH_RECT, Size(sz,sz));
+    
+    cv::erode(dst, dst, kernel);
+    
+    
+    
+    
+#endif
 }
 
 const Scalar AtmLight(Mat &im, Mat &dark)
@@ -79,58 +125,88 @@ const Scalar AtmLight(Mat &im, Mat &dark)
     atmsum.val[1] = atmsum.val[1]/ numpx;
     atmsum.val[2] = atmsum.val[2]/ numpx;
     
+    cout << "atmsum: " << atmsum << endl;
+    
     return atmsum;
 }
 
-const Mat  TransmissionEstimate(Mat &im, Scalar A, int sz)
+void TransmissionEstimate(Mat &im, Scalar A, int sz, Mat &dst)
 {
+#if 1
     float omega = 0.95;
     
     Mat im3;
     
-    
-    vector<Mat> img3_ch(3);
+//    vector<Mat> img3_ch(3);
     vector<Mat> im_ch(3);
-    cv::split(im, img3_ch);
+//    cv::split(im, img3_ch);
     cv::split(im, im_ch);
     
-    img3_ch[0] = (im_ch[0] / A.val[0]) * 255;
-    img3_ch[1] = (im_ch[1] / A.val[1]) * 255;
-    img3_ch[2] = (im_ch[2] / A.val[2]) * 255;
+    im_ch[0] = (im_ch[0] / A.val[0]) * 255;
+    im_ch[1] = (im_ch[1] / A.val[1]) * 255;
+    im_ch[2] = (im_ch[2] / A.val[2]) * 255;
     
-    cv::merge(img3_ch, im3);
+    cv::merge(im_ch, im3);
     
-    Mat transmission = 255 - omega*DarkChannel(im3,sz);
+    Mat _dark;
+    DarkChannel(im3,sz,_dark);
+    dst = 255 - omega*_dark;
+//    Mat transmission = 255 - omega*_dark;
+//    return transmission;
+#else
+    float omega = 0.95;
+    
+    Mat im_airl = Mat::zeros(im.rows, im.cols, CV_8UC3);
+    
+    // Reduce memory
+    for(int row = 0; row < im.rows; row++)
+    {
+        for(int col = 0; col < im.cols; col++)
+        {
+            im_airl.at<Vec3b>(row,col)[0] = (im.at<Vec3b>(row,col)[0] / A.val[0]) * 255;
+            im_airl.at<Vec3b>(row,col)[1] = (im.at<Vec3b>(row,col)[1] / A.val[1]) * 255;
+            im_airl.at<Vec3b>(row,col)[2] = (im.at<Vec3b>(row,col)[2] / A.val[2]) * 255;
+        }
+    }
+    
+    Mat _dark;
+    DarkChannel(im_airl,sz,_dark);
+    dst = 255 - omega*_dark;
     
     
-    return transmission;
+    
+    
+#endif
+    
+    
 }
 
-const Mat TransmissionRefine(Mat &im, Mat &et)
+void TransmissionRefine(Mat &im, Mat &et)
 {
     Mat gray;
     cvtColor(im, gray, cv::COLOR_BGR2GRAY);
-    return Guidedfilter(gray, et, 60, 0.0001);
+    
+    Guidedfilter(gray, et, 60, 0.0001);
 }
 
-const Mat Guidedfilter(Mat &im, Mat &p, int r, float eps)
+void Guidedfilter(Mat &im_grey, Mat &transmission_map, int r, float eps)
 {
-
+    // Original
+#if 0
     // Conver to float
     im.convertTo(im, CV_32FC3);
     cv::normalize(im, im, 0, 1, cv::NORM_MINMAX);
     
-    p.convertTo(p, CV_32FC1);
-    cv::normalize(p, p, 0, 1, cv::NORM_MINMAX);
-    
+    transmission_map.convertTo(transmission_map, CV_32FC1);
+    cv::normalize(transmission_map, transmission_map, 0, 1, cv::NORM_MINMAX);
     
     Mat q, mean_I, mean_p, mean_Ip;
     Mat mean_II, mean_a, mean_b;
     Mat im_p;
     
     cv::boxFilter(im, mean_I, CV_32F, Size(r,r));
-    cv::boxFilter(p, mean_p, CV_32F, Size(r,r));
-    cv::boxFilter(im.mul(p), mean_Ip, CV_32F, Size(r,r));
+    cv::boxFilter(transmission_map, mean_p, CV_32F, Size(r,r));
+    cv::boxFilter(im.mul(transmission_map), mean_Ip, CV_32F, Size(r,r));
 
     Mat cov_Ip = mean_Ip - mean_I.mul(mean_p);
     cv::boxFilter(im.mul(im), mean_II,CV_32F,Size(r,r));
@@ -149,32 +225,122 @@ const Mat Guidedfilter(Mat &im, Mat &p, int r, float eps)
     q.convertTo(q, CV_8UC1);
     
     return q;
+
+#else
+    
+    // Reducir memoria
+    
+    // Conver to float
+    im_grey.convertTo(im_grey, CV_32FC1);
+    im_grey = im_grey/255;
+    
+    transmission_map.convertTo(transmission_map, CV_32FC1);
+    transmission_map = transmission_map/255;
+    
+    Mat mean_I;
+    Mat mean_Ip;
+    Mat mean_II;
+    
+    // Mean
+    mean_Ip = im_grey.mul(transmission_map);
+    
+    cv::boxFilter(mean_Ip, mean_Ip, CV_32F, Size(r,r));
+    cv::boxFilter(im_grey, mean_I, CV_32F, Size(r,r));
+    cv::boxFilter(transmission_map, transmission_map, CV_32F, Size(r,r));
+    
+    // cov_Ip
+    // Mat cov_Ip = mean_Ip - mean_I.mul(mean_p);
+    mean_Ip = mean_Ip - mean_I.mul(transmission_map);
+    
+    // Mean
+    mean_II = im_grey.mul(im_grey);
+    cv::boxFilter(mean_II, mean_II,CV_32F,Size(r,r));
+    
+    // var_I
+    // Mat var_I = mean_II - mean_I.mul(mean_I);
+    mean_II = mean_II - mean_I.mul(mean_I);
+    
+    // a
+    //  Mat a = cov_Ip/(var_I + eps);
+    mean_II = cv::max(mean_II, eps);
+    mean_Ip = mean_Ip/mean_II;
+    // b
+    // Mat b = mean_p - a.mul(mean_I);
+    mean_I = mean_Ip.mul(mean_I);
+    mean_I = transmission_map - mean_I;
+    
+    // Mean
+    cv::boxFilter(mean_Ip, mean_Ip, CV_32F, Size(r,r));
+    cv::boxFilter(mean_I, mean_I, CV_32F, Size(r,r));
+    
+    mean_Ip = im_grey.mul(mean_Ip);
+    transmission_map = mean_Ip + mean_I;
+    
+    // Go back to uint8
+    transmission_map = transmission_map * 255;
+    transmission_map.convertTo(transmission_map, CV_8UC1);
+    
+#endif
+    
 }
 
-const Mat Recover(Mat &im, Mat &t, Scalar A, float tx=0.1)
+void Recover(Mat &im, Mat &t, Mat &dst, Scalar A, int tx)
 {
-    Mat res;
-    res.create(im.rows, im.cols, im.type());
+    dst = Mat::zeros(im.rows, im.cols, im.type());
     
-    for(int _row = 0; _row < res.rows; _row++)
+    for(int _row = 0; _row < dst.rows; _row++)
     {
-        for(int _col = 0; _col < res.cols; _col++)
+        for(int _col = 0; _col < dst.cols; _col++)
         {
             float factor = 255.f/t.at<uchar>(_row, _col);
             
-            res.at<Vec3b>(_row, _col)[0] = (im.at<Vec3b>(_row, _col)[0] - A.val[0])*factor + A.val[0];
-            res.at<Vec3b>(_row, _col)[1] = (im.at<Vec3b>(_row, _col)[1] - A.val[1])*factor + A.val[1];
-            res.at<Vec3b>(_row, _col)[2] = (im.at<Vec3b>(_row, _col)[2] - A.val[2])*factor + A.val[2];
+            dst.at<Vec3b>(_row, _col)[0] = (im.at<Vec3b>(_row, _col)[0] - A.val[0])*factor + A.val[0];
+            dst.at<Vec3b>(_row, _col)[1] = (im.at<Vec3b>(_row, _col)[1] - A.val[1])*factor + A.val[1];
+            dst.at<Vec3b>(_row, _col)[2] = (im.at<Vec3b>(_row, _col)[2] - A.val[2])*factor + A.val[2];
         }
     }
     
-    return res;
+//    vector<Mat> channels(3);
+//    cv::split(im, channels);
+//    
+//    cout << im(Range(1,5),Range(1,5)) << endl;
+//    cout << dst(Range(1,5),Range(1,5)) << endl;
+//    cout << t(Range(1,5),Range(1,5)) << endl;
+//    
+//    t.convertTo(t, CV_32FC3);
+//    im.convertTo(dst, CV_32FC3);
+//    t = 255.f/t;
+//    
+//    cout << dst(Range(1,5),Range(1,5)) << endl;
+//    cout << t(Range(1,5),Range(1,5)) << endl;
+//    cout << A << endl;
+//    
+//    cv::absdiff(im, A, dst);
+//    cv::multiply(dst, t, dst);
+////    dst = (im -A);
+////    dst = dst*factor;
+//    
+//    cout << dst(Range(1,5),Range(1,5)) << endl;
 }
 
 #include "raw_image.hpp"
 
 int main(int argc, const char ** argv)
 {
+    
+//    Mat T(3,3, CV_8UC3, Scalar(1,2,3));
+//    Mat R1 = Mat::zeros(3, 3, CV_8UC1);
+//    
+//    cout << T << endl;
+//    cout << R1 << endl;
+//    
+//    int from_to[] = { 1,0 };
+//    cv::mixChannels( &T, 1, &R1, 1, from_to, 1 );
+//    
+//    
+//    cout << T << endl;
+//    cout << R1 << endl;
+    
     CommandLineParser parser(argc, argv, keys);
     if (parser.has("help"))
     {
@@ -192,12 +358,17 @@ int main(int argc, const char ** argv)
     string filename = parser.get<string>(0);
     
     Mat I = imread(filename, IMREAD_COLOR);
+    if(I.empty())
+    {
+        cout << "Error loading file" << endl;
+    }
 //    I.convertTo(I, CV_32FC3);
 //    cv::normalize(I, I, 0, 1, cv::NORM_MINMAX);
     
     auto start = high_resolution_clock::now();
     
-    Mat dark    = DarkChannel(I,15);
+    Mat dark;
+    DarkChannel(I,15,dark);
     
     auto _darkchannel = high_resolution_clock::now();
     
@@ -205,15 +376,20 @@ int main(int argc, const char ** argv)
     
     auto _airlight = high_resolution_clock::now();
     
-    Mat te      = TransmissionEstimate(I,A,15);
+    Mat te;
+    TransmissionEstimate(I,A,15, te);
+   
+    
     
     auto _transmision = high_resolution_clock::now();
     
-    Mat t       = TransmissionRefine(I,te);
+//    Mat t;
+    TransmissionRefine(I,te);
     
     auto _transmision_refine = high_resolution_clock::now();
     
-    Mat J       = Recover(I, t, A, 0.1);
+    Mat J;
+    Recover(I, te, J, A, 1);
     
     auto stop = high_resolution_clock::now();
     
@@ -231,12 +407,13 @@ int main(int argc, const char ** argv)
     cout << "Time taken by recover :            "  << duration_stop.count() << " milliseconds" << endl;
     cout << "Time total:                        "  << duration.count() << " milliseconds" << endl;
     
-//    imshow("I", I);
-//    imshow("dark", dark);
-//    imshow("te", te);
+    imshow("I", I);
+    imshow("dark", dark);
+    imshow("te", te);
 //    imshow("t", t);
-//    imshow("J", J);
-//    waitKey(0);
+    imshow("J", J);
+//    imshow("J2", J2);
+    waitKey(0);
     
     return 0;
 }
