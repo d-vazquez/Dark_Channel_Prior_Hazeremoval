@@ -68,10 +68,10 @@ void DarkChannel(Mat &img, int sz, Mat &dst)
     
     // Move ch0 to dst and ch1 to temp to compare later
     int from_to[] = { 0,0, 1,1 };
-    Mat out[]     = { dst, temp };
+    vector <Mat> out { dst, temp };
     
     // Actually move arrays
-    cv::mixChannels( &img, 1, out, 2, from_to, 2 );
+    cv::mixChannels( &img, 1, &out[0], 2, from_to, 2 );
     
     // Get min from ch0 and ch1
     dst = cv::min(dst, temp);
@@ -132,14 +132,12 @@ const Scalar AtmLight(Mat &im, Mat &dark)
 
 void TransmissionEstimate(Mat &im, Scalar A, int sz, Mat &dst)
 {
-#if 1
+#if 0
     float omega = 0.95;
     
     Mat im3;
     
-//    vector<Mat> img3_ch(3);
     vector<Mat> im_ch(3);
-//    cv::split(im, img3_ch);
     cv::split(im, im_ch);
     
     im_ch[0] = (im_ch[0] / A.val[0]) * 255;
@@ -151,8 +149,6 @@ void TransmissionEstimate(Mat &im, Scalar A, int sz, Mat &dst)
     Mat _dark;
     DarkChannel(im3,sz,_dark);
     dst = 255 - omega*_dark;
-//    Mat transmission = 255 - omega*_dark;
-//    return transmission;
 #else
     float omega = 0.95;
     
@@ -173,12 +169,7 @@ void TransmissionEstimate(Mat &im, Scalar A, int sz, Mat &dst)
     DarkChannel(im_airl,sz,_dark);
     dst = 255 - omega*_dark;
     
-    
-    
-    
 #endif
-    
-    
 }
 
 void TransmissionRefine(Mat &im, Mat &et)
@@ -288,59 +279,54 @@ void Recover(Mat &im, Mat &t, Mat &dst, Scalar A, int tx)
 {
     dst = Mat::zeros(im.rows, im.cols, im.type());
     
+#if 0
+    int from_to[2];
+    Mat temp(im.rows, im.cols, CV_32FC1);
+    im.convertTo(im, CV_32FC3);
+    
+    
+    cv::subtract(im, A, dst);
+    
+    for(int i = 0; i < 3; i++)
+    {
+        from_to[0] = i;
+        from_to[1] = 0;
+        cv::mixChannels( &dst, 1, &temp, 1, from_to, 1);
+        
+        //    temp = (temp/t0*255)
+        cv::divide(temp,t,temp,255.f, temp.type());
+        
+        from_to[0] = 0;
+        from_to[1] = i;
+        cv::mixChannels( &temp, 1, &dst, 1, from_to, 1);
+    }
+   
+    temp.release();
+    cv::add(dst, A, dst);
+    dst.convertTo(dst, CV_8UC3);
+    
+#else
     for(int _row = 0; _row < dst.rows; _row++)
     {
         for(int _col = 0; _col < dst.cols; _col++)
         {
             float factor = 255.f/t.at<uchar>(_row, _col);
             
+            int temp  = (im.at<Vec3b>(_row, _col)[0] - A.val[0])*factor + A.val[0];
             dst.at<Vec3b>(_row, _col)[0] = (im.at<Vec3b>(_row, _col)[0] - A.val[0])*factor + A.val[0];
             dst.at<Vec3b>(_row, _col)[1] = (im.at<Vec3b>(_row, _col)[1] - A.val[1])*factor + A.val[1];
             dst.at<Vec3b>(_row, _col)[2] = (im.at<Vec3b>(_row, _col)[2] - A.val[2])*factor + A.val[2];
         }
     }
+#endif
     
-//    vector<Mat> channels(3);
-//    cv::split(im, channels);
-//    
-//    cout << im(Range(1,5),Range(1,5)) << endl;
-//    cout << dst(Range(1,5),Range(1,5)) << endl;
-//    cout << t(Range(1,5),Range(1,5)) << endl;
-//    
-//    t.convertTo(t, CV_32FC3);
-//    im.convertTo(dst, CV_32FC3);
-//    t = 255.f/t;
-//    
-//    cout << dst(Range(1,5),Range(1,5)) << endl;
-//    cout << t(Range(1,5),Range(1,5)) << endl;
-//    cout << A << endl;
-//    
-//    cv::absdiff(im, A, dst);
-//    cv::multiply(dst, t, dst);
-////    dst = (im -A);
-////    dst = dst*factor;
-//    
-//    cout << dst(Range(1,5),Range(1,5)) << endl;
 }
 
 #include "raw_image.hpp"
 
 int main(int argc, const char ** argv)
 {
-    
-//    Mat T(3,3, CV_8UC3, Scalar(1,2,3));
-//    Mat R1 = Mat::zeros(3, 3, CV_8UC1);
-//    
-//    cout << T << endl;
-//    cout << R1 << endl;
-//    
-//    int from_to[] = { 1,0 };
-//    cv::mixChannels( &T, 1, &R1, 1, from_to, 1 );
-//    
-//    
-//    cout << T << endl;
-//    cout << R1 << endl;
-    
+ 
     CommandLineParser parser(argc, argv, keys);
     if (parser.has("help"))
     {
@@ -362,8 +348,6 @@ int main(int argc, const char ** argv)
     {
         cout << "Error loading file" << endl;
     }
-//    I.convertTo(I, CV_32FC3);
-//    cv::normalize(I, I, 0, 1, cv::NORM_MINMAX);
     
     auto start = high_resolution_clock::now();
     
@@ -379,11 +363,8 @@ int main(int argc, const char ** argv)
     Mat te;
     TransmissionEstimate(I,A,15, te);
    
-    
-    
     auto _transmision = high_resolution_clock::now();
     
-//    Mat t;
     TransmissionRefine(I,te);
     
     auto _transmision_refine = high_resolution_clock::now();
@@ -402,7 +383,7 @@ int main(int argc, const char ** argv)
     
     cout << "Time taken by Dark channel:        "  << duration_dc.count() << " milliseconds" << endl;
     cout << "Time taken by airlight:            "  << duration_air.count() << " milliseconds" << endl;
-    cout << "Time taken by transmision:         "  << duration_trams.count() << " milliseconds" << endl;
+    cout << "Time taken by transmision estimate:"  << duration_trams.count() << " milliseconds" << endl;
     cout << "Time taken by tranmsmision refined:"  << duration_tramsred.count() << " milliseconds" << endl;
     cout << "Time taken by recover :            "  << duration_stop.count() << " milliseconds" << endl;
     cout << "Time total:                        "  << duration.count() << " milliseconds" << endl;
@@ -410,9 +391,7 @@ int main(int argc, const char ** argv)
     imshow("I", I);
     imshow("dark", dark);
     imshow("te", te);
-//    imshow("t", t);
     imshow("J", J);
-//    imshow("J2", J2);
     waitKey(0);
     
     return 0;
