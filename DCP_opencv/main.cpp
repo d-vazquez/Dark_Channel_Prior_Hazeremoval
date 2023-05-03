@@ -90,9 +90,7 @@ void DarkChannel(Mat &img, int sz, Mat &dst)
     // 'erode' image, so calculate the minimun value in the window given by sz
     Mat kernel = getStructuringElement(cv::MorphShapes::MORPH_RECT, Size(sz,sz));
     
-    cv::erode(dst, dst, kernel);
-    
-    
+    cv::erode(dst, dst, kernel, Point((int)(sz/2),(int)(sz/2)), 1, cv::BORDER_CONSTANT);
     
     
 #endif
@@ -220,6 +218,9 @@ void Guidedfilter(Mat &im_grey, Mat &transmission_map, int r, float eps)
 #else
     
     // Reducir memoria
+    Mat mean_I = Mat(im_grey.rows, im_grey.cols, CV_32FC1);
+    Mat mean_Ip = Mat(im_grey.rows, im_grey.cols, CV_32FC1);
+    Mat mean_II = Mat(im_grey.rows, im_grey.cols, CV_32FC1);
     
     // Conver to float
     im_grey.convertTo(im_grey, CV_32FC1);
@@ -227,10 +228,6 @@ void Guidedfilter(Mat &im_grey, Mat &transmission_map, int r, float eps)
     
     transmission_map.convertTo(transmission_map, CV_32FC1);
     transmission_map = transmission_map/255;
-    
-    Mat mean_I;
-    Mat mean_Ip;
-    Mat mean_II;
     
     // Mean
     mean_Ip = im_grey.mul(transmission_map);
@@ -241,7 +238,7 @@ void Guidedfilter(Mat &im_grey, Mat &transmission_map, int r, float eps)
     
     // cov_Ip
     // Mat cov_Ip = mean_Ip - mean_I.mul(mean_p);
-    mean_Ip = mean_Ip - mean_I.mul(transmission_map);
+    mean_Ip = mean_Ip - (mean_I).mul(transmission_map);
     
     // Mean
     mean_II = im_grey.mul(im_grey);
@@ -249,15 +246,15 @@ void Guidedfilter(Mat &im_grey, Mat &transmission_map, int r, float eps)
     
     // var_I
     // Mat var_I = mean_II - mean_I.mul(mean_I);
-    mean_II = mean_II - mean_I.mul(mean_I);
+    mean_II = mean_II - (mean_I).mul(mean_I);
     
     // a
     //  Mat a = cov_Ip/(var_I + eps);
     mean_II = cv::max(mean_II, eps);
-    mean_Ip = mean_Ip/mean_II;
+    mean_Ip = (mean_Ip)/(mean_II);
     // b
     // Mat b = mean_p - a.mul(mean_I);
-    mean_I = mean_Ip.mul(mean_I);
+    mean_I = (mean_Ip).mul(mean_I);
     mean_I = transmission_map - mean_I;
     
     // Mean
@@ -270,6 +267,7 @@ void Guidedfilter(Mat &im_grey, Mat &transmission_map, int r, float eps)
     // Go back to uint8
     transmission_map = transmission_map * 255;
     transmission_map.convertTo(transmission_map, CV_8UC1);
+    
     
 #endif
     
@@ -322,7 +320,14 @@ void Recover(Mat &im, Mat &t, Mat &dst, Scalar A, int tx)
     
 }
 
+void mat_split(Mat &src, Mat &top, Mat &bot)
+{
+    top = src(Range(0,src.rows/2), Range(0,src.cols));
+    bot = src(Range(src.rows/2,src.rows), Range(0,src.cols));
+}
+
 #include "raw_image.hpp"
+//#define PARALLELIZE
 
 int main(int argc, const char ** argv)
 {
@@ -349,28 +354,81 @@ int main(int argc, const char ** argv)
         cout << "Error loading file" << endl;
     }
     
+    
+    cout << "I rows: " << I.rows << " :: cols: " << I.cols << endl;
+    
     auto start = high_resolution_clock::now();
     
-    Mat dark;
-    DarkChannel(I,15,dark);
+    Mat dark_T, dark_B, I_T, I_B, te_T, te_B, J_T, J_B;
+    Mat te(I.rows, I.cols, CV_8UC1);
+    Mat dark(I.rows, I.cols, CV_8UC1);
+    Mat J(I.rows, I.cols, I.type());
+    
+    mat_split(I, I_T, I_B);
+    mat_split(J, J_T, J_B);
+    mat_split(dark, dark_T, dark_B);
+    mat_split(te, te_T, te_B);
+    
+#if defined(PARALLELIZE)
+    DarkChannel(I_T, 15, dark_T);
+    DarkChannel(I_B, 15, dark_B);
+#else
+    DarkChannel(I, 15, dark);
+#endif
+    
+//    imshow("I", I);
+//    imshow("dark", dark);
+//    waitKey(0);
+//    return 0 ;
     
     auto _darkchannel = high_resolution_clock::now();
     
-    Scalar A    = AtmLight(I,dark);
+    Scalar A   = AtmLight(I,dark);
+    Scalar A_T = AtmLight(I_T,dark_T);
+    Scalar A_B = AtmLight(I_B,dark_B);
+    
+    Scalar A_M;
+    A_M.val[0] = cv::max(A_T.val[0], A_B.val[0]);
+    A_M.val[1] = cv::max(A_T.val[1], A_B.val[1]);
+    A_M.val[2] = cv::max(A_T.val[2], A_B.val[2]);
+    
+    cout << A_T << endl;
+    cout << A_B << endl;
+    cout << A_M << endl;
+    cout << A << endl;
     
     auto _airlight = high_resolution_clock::now();
     
-    Mat te;
-    TransmissionEstimate(I,A,15, te);
-   
+#if defined(PARALLELIZE)
+    TransmissionEstimate(I_T, A, 15, te_T);
+    TransmissionEstimate(I_B, A, 15, te_B);
+#else
+    TransmissionEstimate(I, A, 15, te);
+#endif
+    imshow("t estimate", te);
+    
     auto _transmision = high_resolution_clock::now();
     
+#if defined(PARALLELIZE)
+    
+    
+    TransmissionRefine(I_T, te_T);
+    TransmissionRefine(I_B, te_B);
+    
+#else
     TransmissionRefine(I,te);
+#endif
+    
+    imshow("t refine", te);
     
     auto _transmision_refine = high_resolution_clock::now();
     
-    Mat J;
+#if defined(PARALLELIZE)
+    Recover(I_T, te_T, J_T, A, 1);
+    Recover(I_B, te_B, J_B, A, 1);
+#else
     Recover(I, te, J, A, 1);
+#endif
     
     auto stop = high_resolution_clock::now();
     
@@ -388,10 +446,9 @@ int main(int argc, const char ** argv)
     cout << "Time taken by recover :            "  << duration_stop.count() << " milliseconds" << endl;
     cout << "Time total:                        "  << duration.count() << " milliseconds" << endl;
     
-    imshow("I", I);
-    imshow("dark", dark);
-    imshow("te", te);
-    imshow("J", J);
+//    imshow("I", I);
+//    imshow("dark", dark);
+//    imshow("J", J);
     waitKey(0);
     
     return 0;
