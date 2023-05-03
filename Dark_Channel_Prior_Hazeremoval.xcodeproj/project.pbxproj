@@ -28,6 +28,7 @@
 		4F65D9B029930D8C0049CF70 /* libopencv_highgui.4.7.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F65D9AF29930D8C0049CF70 /* libopencv_highgui.4.7.0.dylib */; };
 		4F65D9B229930DB20049CF70 /* libopencv_imgproc.4.7.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F65D9B129930DB20049CF70 /* libopencv_imgproc.4.7.0.dylib */; };
 		4F65D9B429930DCF0049CF70 /* libopencv_imgcodecs.4.7.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F65D9B329930DCF0049CF70 /* libopencv_imgcodecs.4.7.0.dylib */; };
+		4F9D4B5F299B731800A8CF8E /* dehaze.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F9D4B5E299B731800A8CF8E /* dehaze.cpp */; };
 		4FA60CB2296DD0A8000559AB /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FA60CB1296DD0A8000559AB /* main.cpp */; };
 /* End PBXBuildFile section */
 
@@ -77,7 +78,6 @@
 /* Begin PBXFileReference section */
 		4F027F4E2995F811005119AC /* Image.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Image.cpp; sourceTree = "<group>"; };
 		4F027F4F2995F811005119AC /* Image.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Image.hpp; sourceTree = "<group>"; };
-		4F3FEF9129937B1E0082F4B6 /* image_array.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = image_array.txt; sourceTree = "<group>"; };
 		4F3FEF9329937C4F0082F4B6 /* matrix.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = matrix.cpp; sourceTree = "<group>"; };
 		4F3FEF95299380DD0082F4B6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		4F3FEFAE299383E30082F4B6 /* Mat Writter */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Mat Writter"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -101,6 +101,8 @@
 		4F72BF362990C93B006F2315 /* libopencv_videoio.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libopencv_videoio.a; path = ../../../../../usr/local/lib/libopencv_videoio.a; sourceTree = "<group>"; };
 		4F88F7562971EA1500EC0224 /* libopencv_imgproc.4.7.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_imgproc.4.7.0.dylib; path = ../../../../../opt/homebrew/Cellar/opencv/4.7.0/lib/libopencv_imgproc.4.7.0.dylib; sourceTree = "<group>"; };
 		4F88F7582971EA7100EC0224 /* libopencv_imgproc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libopencv_imgproc.a; path = ../../../../../opt/homebrew/Cellar/opencv/4.7.0/lib/libopencv_imgproc.a; sourceTree = "<group>"; };
+		4F9D4B5D299B731800A8CF8E /* dehaze.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = dehaze.hpp; sourceTree = "<group>"; };
+		4F9D4B5E299B731800A8CF8E /* dehaze.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dehaze.cpp; sourceTree = "<group>"; };
 		4FA60CAE296DD0A8000559AB /* DCP_opencv */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = DCP_opencv; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FA60CB1296DD0A8000559AB /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		4FA60CB9296DDA15000559AB /* libopencv_core.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_core.dylib; path = ../../../../../opt/homebrew/Cellar/opencv/4.7.0/lib/libopencv_core.dylib; sourceTree = "<group>"; };
@@ -173,7 +175,6 @@
 				4F3FEF95299380DD0082F4B6 /* main.cpp */,
 				4F3FEFC12993FC670082F4B6 /* mat_writer.hpp */,
 				4F3FEFC22993FC670082F4B6 /* mat_writer.cpp */,
-				4F3FEF9129937B1E0082F4B6 /* image_array.txt */,
 			);
 			path = Mat_writter;
 			sourceTree = "<group>";
@@ -190,6 +191,8 @@
 		4F3FEFD1299478910082F4B6 /* DCP_purecpp */ = {
 			isa = PBXGroup;
 			children = (
+				4F9D4B5E299B731800A8CF8E /* dehaze.cpp */,
+				4F9D4B5D299B731800A8CF8E /* dehaze.hpp */,
 				4F3FEFD2299478BA0082F4B6 /* main.cpp */,
 				4F027F4E2995F811005119AC /* Image.cpp */,
 				4F027F4F2995F811005119AC /* Image.hpp */,
@@ -383,6 +386,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F9D4B5F299B731800A8CF8E /* dehaze.cpp in Sources */,
 				4F3FEFD3299478C50082F4B6 /* main.cpp in Sources */,
 				4F027F502995F811005119AC /* Image.cpp in Sources */,
 			);

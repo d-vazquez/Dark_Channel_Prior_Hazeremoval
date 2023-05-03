@@ -26,11 +26,26 @@ private:
     
     
 public:
+    Image(int rows, int cols, int channels, const uint8_t* data)
+    {
+        _rows = rows;
+        _cols = cols;
+        _channels = channels;
+        _size = _channels*_rows*_cols;
+        _data = new float [_size];
+        _malloc = true;
+        for(int i = 0; i < _size; i++)
+        {
+            _data[i] = (float)data[i] / 255.0;
+        }
+    }
+    
     Image(int rows, int cols, int channels, float* data)
     {
         _rows = rows;
         _cols = cols;
         _channels = channels;
+        _size = _channels*_rows*_cols;
         _data = data;
         _malloc = false;
     }
